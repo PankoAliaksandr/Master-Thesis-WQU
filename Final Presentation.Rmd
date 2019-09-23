@@ -1,0 +1,1358 @@
+---
+title: "MScFE Capstone Project"
+author: "Aliaksandr Panko, Nadzeya Yakimchyk"
+date: "August 4, 2019"
+output: slidy_presentation
+classoption: 10pt
+fig_cap: yes
+keep_tex: yes
+fig_width: 3
+fig_height: 2
+header-includes:
+  - \usepackage{titling}
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+  - \setlength{\droptitle}{10em} 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.pos= "h")
+```
+
+# Introduction
+
+Nowadays sustainable investment is a hot topic.
+
+- Today more and more investors do not want to support weapons manufacturers and other companies, exploiting human weaknesses.
+
+- New trend of making the world a better place forces portfolio managers to investigate Socially Responsible Investing (SRI) and take into account new requirements of investors.
+
+- However, risk-adjusted returns, as a performance indicator, still play the most significant role.
+
+- Having this in mind, researchers must answer how sustainable investing influence the performance.
+
+
+# Literature review
+Literature review showed that currently there is still no consensus whether responsible investing is a good bet for investors or not.
+
+- "Optimists" camp showed that excluding worst (in terms of ESG scores) 10%-25% stocks leads to outperformance and does not harm diversification [25].
+
+- "Neutral" camp, in their turn, are not so optimistic and just argue that there is no difference in alphas between "ESG winners" portfolio and "ESG losers" portfolio [9].
+
+- From the opposite site, "Pessimists" camp claim that investors, who use ESG strategies, exposed to average loss of 40.6% annually in risk-adjusted returns. Moreover, they also argue that the underperformance is robust against different model specifications and test assets [7].
+
+- However, there is one potential reason of such different results. There are several independent sustainability scores data providers, which could provide a bit different scores. Furthermore, many researchers in their papers used rather short time period, obviously, making all the findings less reliable.
+
+
+
+# Research Question
+
+There are researches that analyse funds performance, other make conclusions about performance of portfolios based on "sustainable" stocks. We are going to analyse our own portfolios, built from stocks with sustainability scores, not funds, whose portfolios can include only 50% of scored stocks.
+
+Additionally, we would like to use longer period to include both expansions and recessions. Finally, we would like to dive deeper and investigate not only composite sustainability score (ESG), but also environmental (E), social (S), corporate governance (G) scores separately for both regions (USA and Europe) and check the robustness of results.
+
+The aim of our research is to answer the main question: "Does investment into sustainable companies lower the overall portfolio performance or not?" Such formulation leads us to the next set of objectives:
+
+1. Analyze consistency of the sustainability scores provided by different data suppliers for American and European markets.
+2. Splitting all companies into clusters based on sustainability scores and forming corresponding portfolios, determine whether "Sustainable investing strategy" leads to underperformance in USA market.
+3. Check the strategy performance also for European market and make a conclusion about the robustness of results.
+
+
+
+# Methodology. Data Description. Datastream
+
+From Datastream we downloaded the next data:
+
+1. Returns of S&P 500 and Stoxx Europe 600 indices and weekly returns of their constituents. Weekly data from June 2003 to May 2018.
+2. Filter for constituents of S&P 500 and Stoxx Europe 600 that shows for every stock whether it is a part of the index this week or not. Weekly data from June 2003 to May 2018.
+3. Sustainability scores for constituents of S&P 500 and Stoxx Europe 600 indices: environmental (E), social (S), corporate governance (G), ESG and combined ESG (ESGCS) scores. Monthly data from December 2002 to December 2017.
+4. Market capitalization for constituents of S&P 500 and Stoxx Europe 600 indices. Monthly data from June 2003 to May 2018.
+5. Price-to-book ratio for constituents of S&P 500 and Stoxx Europe 600 indices. Monthly data from June 2003 to May 2018.
+6. Firm information about constituents of S&P 500 and Stoxx Europe 600 indices, including firm name, industry and different stock identifiers.
+
+# Methodology. Data Description. Sustainalytics
+
+From Sustainalytics we downloaded the next data:
+
+1. ESG score for constituents of MSCI USA and MSCI Europe indices. Weekly data from December 2009 to December 2017.
+2. Firm information about constituents of MSCI USA and MSCI Europe indices, including firm name, industry and different stock identifiers.
+
+
+
+# Methodolody for the Calculation of Sustainability Scores Provided by Datastream and Sustainalytics. Part 1
+
+Datastream contains more than 400 ESG measures publicly disclosed by companies. Sustainability scores provided by Datastream are calculated based on 178 company-level key ESG measures. They are grouped into 10 categories, illustrated on Figure 1.
+
+<center>
+
+![Datastream ESG Categories (Thomson Reuters ESG Scores 2019)](D:\Capstone Project\Images\10 Datastream categories.png){
+width=80%, heigth=80% }
+
+</center>
+
+
+# Methodolody for the Calculation of Sustainability Scores Provided by Datastream and Sustainalytics. Part 2
+
+
+A combination of the 10 categories, weighted proportionally to the number of measures within each category, delivers the three pillar scores and the final ESG score. Thus, E, S, G and ESG scores are calculated using the next formulas:
+
+\begin{equation}
+E = \frac{19}{61} Resource Use + \frac{22}{61} Emissions + \frac{20}{61} Innovation
+\end{equation}
+
+\begin{equation}
+S = \frac{29}{63} Workforce + \frac{8}{63} Human Rights + \frac{14}{63} Community + \frac{12}{63} Product Responsibility
+\end{equation}
+
+\begin{equation}
+G = \frac{34}{54} Management + \frac{12}{54} Shareholders + \frac{8}{54} CSR Strategy
+\end{equation}
+
+\begin{equation}
+ESG = \frac{61}{178} E + \frac{63}{178} S + \frac{54}{178} G
+\end{equation}
+
+# Methodolody for the Calculation of Sustainability Scores Provided by Datastream and Sustainalytics. Part 3
+
+Additionally, ESG Controversies Score is computed based on 23 controversy measures across all 10 categories.
+
+Finally, ESG Combined Score (ESGCS) is calculated, according to the scheme described on Figure 2 [23].
+
+<center>
+
+![Final ESG Combined Score Assembly (Thomson Reuters ESG Scores 2019)](D:\Capstone Project\Images\ESGCS.png){
+width=80%, heigth=80% }
+
+</center>
+
+# Methodolody for the Calculation of Sustainability Scores Provided by Datastream and Sustainalytics. Part 4
+
+ESG score, provided by Sustainalytics, measures how well companies solve the environmental, social and governance problems that can negatively affect their business and stakeholders.
+
+The following indicators are assessed for the environmental, social and governance scores:
+
+- Preparedness measures. How well company manages ESG risks through programs, policies and management systems?
+- Disclosure indicators. Does company report according to best practice and notify about relevant ESG issues?
+- Quantitative (e.g., amount of pollutant emission) and Qualitative (e.g., involvement in ESG controversies) performance measures [22]. 
+
+# Capstone Project Methodology. Steps 1-3
+
+The first step of our project is data download. We need to download from Datastream and Sustainalytics all required data
+
+The second step is data preparation. We need to determine how many companies from index have E, S, G, ESG and ESGCS Datastream scores. The amount must be sufficient. Additionally, we introduce a new ESG Equal score that is equally-weighted average of E,S and G scores.
+
+\begin{equation}
+ESG_{Equal} = \frac{1}{3} E + \frac{1}{3} S + \frac{1}{3} G
+\end{equation}
+
+The third step answers the first core question: "How consistent are scores provided by different suppliers?" Consistency of the scores is analyzed by checking correlation between Sustainalytics ESG score and Datastream E, S, G, ESG, ESGCS and ESG Equal scores (6 sustainability scores in total).
+
+# Capstone Project Methodology. Step 4
+
+The fourth step deals with ESG-scores-based portfolios creation.
+The next substeps are required for each of 6 scores:
+
+1. Split all companies into five clusters based on the sustainability score values in the way that portfolio 1 contains 20% of all companies with the lowest score, ..., portfolio 5 contains 20% with the highest one.
+2. Create five equally-weighted portfolios.
+3. Reshuffle the portfolios in June of every year based on the sustainability score values from December of previous year. It is enough to reshuffle the portfolios once per year because Datastream sustainability scores are updated on annual basis.
+
+Additionally, the all-best portfolio needs to be constructed. It contains stocks from top 20% of each E, S and G scores.
+
+# Capstone Project Methodology. Step 5
+
+The fifth step is performance analysis. Several indicators are important to reflect:
+
+1. Average annual return
+2. Annual standard deviation
+3. Sharpe ratio
+4. Cumulative return
+
+These characteristics are compared with those of the benchmark index and all-best portfolio. This step will provide answer to the second core question: "Is it true that "bad" companies could give better performance and investing in "good" stocks could lead to underperformance?"
+
+# Capstone Project Methodology. Step 6
+
+In the sixth step we analyze size, value and momentum characteristics of the portfolios. Size score is represented by market capitalization, price-to-book ratio is used as a value score and momentum score is a six-month cumulative return. Then we need to apply normalization to these scores, that scales them in the range [0,1]. The next formula is used for normalization:
+
+\begin{equation}
+NormalizedScore = \frac{Score - ScoreMin}{ScoreMax - ScoreMin}
+\end{equation}
+
+Our claim is that ESG scores are positively correlated with company market capitalization (size effect).
+
+# Capstone Project Methodology. Step 7
+
+In the seventh step we analyze sensitivity to the market movements, calculating Market Beta, Bull and Bear Market Betas. Bull/Bear Market Beta measures sensitivity of a return of the stock to positive/negative return of the benchmark.
+
+Additionally, we conduct the analysis above for double-sorted portfolios. Thus, we can capture the size effect. Firstly, we divide all stocks into two equal halves, based on the size score. Secondly, we divide each half into five parts based on the sustainability score. After that, we correspondingly merge stocks from both halves, forming five double-sorted portfolios in the result.
+
+Finally, we examine robustness of our analysis, switching from S&P500 universe to Stoxx Europe 600 universe. The third core question of our research is supposed to be answered in this section. Having all the performance indicators and other results for USA market, we will check if the picture is the same for Europe.
+
+
+# Capstone Project Methodology. Implementation
+
+Regarding implementation, we use R language, which provides a powerful set of functions for data analysis and incredible visualization packages. Moreover, the final document is done using R knitr library, which helps to easily incorporate R results in .pdf document.
+
+# Results. S&P 500 Universe. Number of Companies
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(xts)
+rm (list = ls())
+wd ="D:/Capstone Project/Data/"
+load(file=paste0(wd, "SPCOMP.RData"))
+
+# Create xts objects from dataframes
+stocks_num_with_esg_score = xts(stocks_num_with_esg_score_df, order.by = as.Date(rownames(stocks_num_with_esg_score_df)))
+
+correlation = xts(correlation_df, order.by = as.Date(rownames(correlation_df)))
+
+all_best_stocks_num = xts(all_best_stocks_num_df, order.by = as.Date(rownames(all_best_stocks_num_df)))
+
+
+cum_esgcs_portfolio_returns = xts(cum_esgcs_portfolio_returns_df, order.by = as.Date(rownames(cum_esgcs_portfolio_returns_df)))
+
+cum_e_portfolio_returns = xts(cum_e_portfolio_returns_df, order.by = as.Date(rownames(cum_e_portfolio_returns_df)))
+
+cum_s_portfolio_returns = xts(cum_s_portfolio_returns_df, order.by = as.Date(rownames(cum_s_portfolio_returns_df)))
+
+cum_g_portfolio_returns = xts(cum_g_portfolio_returns_df, order.by = as.Date(rownames(cum_g_portfolio_returns_df)))
+
+cum_esg_portfolio_returns = xts(cum_esg_portfolio_returns_df, order.by = as.Date(rownames(cum_esg_portfolio_returns_df)))
+
+cum_equal_esg_portfolio_returns = xts(cum_equal_esg_portfolio_returns_df, order.by = as.Date(rownames(cum_equal_esg_portfolio_returns_df)))
+
+
+esgcs_avg_esg_score = xts(esgcs_avg_esg_score_df, order.by = as.Date(rownames(esgcs_avg_esg_score_df)))
+
+e_avg_esg_score = xts(e_avg_esg_score_df, order.by = as.Date(rownames(e_avg_esg_score_df)))
+
+s_avg_esg_score = xts(s_avg_esg_score_df, order.by = as.Date(rownames(s_avg_esg_score_df)))
+
+g_avg_esg_score = xts(g_avg_esg_score_df, order.by = as.Date(rownames(g_avg_esg_score_df)))
+
+esg_avg_esg_score = xts(esg_avg_esg_score_df, order.by = as.Date(rownames(esg_avg_esg_score_df)))
+
+equal_esg_avg_esg_score = xts(equal_esg_avg_esg_score_df, order.by = as.Date(rownames(equal_esg_avg_esg_score_df)))
+
+
+esgcs_avg_size_score = xts(esgcs_avg_size_score_df, order.by = as.Date(rownames(esgcs_avg_size_score_df)))
+
+e_avg_size_score = xts(e_avg_size_score_df, order.by = as.Date(rownames(e_avg_size_score_df)))
+
+s_avg_size_score = xts(s_avg_size_score_df, order.by = as.Date(rownames(s_avg_size_score_df)))
+
+g_avg_size_score = xts(g_avg_size_score_df, order.by = as.Date(rownames(g_avg_size_score_df)))
+
+esg_avg_size_score = xts(esg_avg_size_score_df, order.by = as.Date(rownames(esg_avg_size_score_df)))
+
+equal_esg_avg_size_score = xts(equal_esg_avg_size_score_df, order.by = as.Date(rownames(equal_esg_avg_size_score_df)))
+
+
+
+esgcs_avg_ptb_score = xts(esgcs_avg_ptb_score_df, order.by = as.Date(rownames(esgcs_avg_ptb_score_df)))
+
+e_avg_ptb_score = xts(e_avg_ptb_score_df , order.by = as.Date(rownames(e_avg_ptb_score_df )))
+
+s_avg_ptb_score = xts(s_avg_ptb_score_df, order.by = as.Date(rownames(s_avg_ptb_score_df)))
+
+g_avg_ptb_score = xts(g_avg_ptb_score_df, order.by = as.Date(rownames(g_avg_ptb_score_df)))
+
+esg_avg_ptb_score = xts(esg_avg_ptb_score_df, order.by = as.Date(rownames(esg_avg_ptb_score_df)))
+
+equal_esg_avg_ptb_score = xts(equal_esg_avg_ptb_score_df, order.by = as.Date(rownames(equal_esg_avg_ptb_score_df)))
+
+
+esgcs_avg_mom_score = xts(esgcs_avg_mom_score_df, order.by = as.Date(rownames(esgcs_avg_mom_score_df)))
+
+e_avg_mom_score = xts(e_avg_mom_score_df, order.by = as.Date(rownames(e_avg_mom_score_df)))
+
+s_avg_mom_score = xts(s_avg_mom_score_df, order.by = as.Date(rownames(s_avg_mom_score_df)))
+
+g_avg_mom_score = xts(g_avg_mom_score_df, order.by = as.Date(rownames(g_avg_mom_score_df)))
+
+esg_avg_mom_score = xts(esg_avg_mom_score_df, order.by = as.Date(rownames(esg_avg_mom_score_df)))
+
+equal_esg_avg_mom_score = xts(equal_esg_avg_mom_score_df, order.by = as.Date(rownames(equal_esg_avg_mom_score_df)))
+
+```
+
+The Figure 3 shows the number of companies in the S&P 500 index with existing sustainability scores. For all scores and all time points this value lays in the range [377;505] that is sufficient for the analysis. For every time point the number of companies with E, S and G scores is the same. The number of companies with ESG and ESGCS scores differs for 52 weeks.
+
+```{r fig3, fig.width = 5.5, fig.asp = .6, fig.cap= "Figure 3: Number of Companies with Datastream Sustainability Scores", fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+Sys.setlocale("LC_ALL", "English")
+plot(stocks_num_with_esg_score, legend.loc = "bottom", main = "Number of Companies",  grid.col = NA) 
+```
+
+# Results. S&P 500 Universe. Correlation
+
+In the Figure 4 correlation between Sustainalytics ESG score and Datastream sustainability scores is illustrated. In all cases correlation is positive. The highest correlation of about 0.7 is observed for Equal ESG score, while ESGCS has the lowest correlation with the Sustainalytics ESG score (smaller than 0.4)
+
+```{r fig4, fig.width = 5.5, fig.asp = .6, fig.cap= "Figure 4: Correlation between Sustainalytics ESG Score and Datastream Sustainability Scores", fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(correlation, legend.loc = "bottom", main = "Correlation",  grid.col = NA)
+```
+
+
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. ESGCS
+
+Figures 5 - 10 represent the cumulative returns for portfolios based on all six scores: ESGCS, E, S, G, ESG and Equal ESG. All 30 portfolios outperform the benchmark - S&P 500 index. For all scores, except of the S score, Portfolio 5, consisting of "good" companies in terms of sustainability, is one of the best performing portfolios.
+
+```{r fig5, fig.width = 5.5, fig.asp = .6, fig.cap= "Figure 5: Cumulative Returns of ESGCS Portfolios", fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_esgcs_portfolio_returns, legend.loc = "left", main = "ESGCS Portfolios", grid.col = NA)
+```
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. E
+
+```{r fig6, fig.width = 9, fig.asp = .6, fig.cap= "Figure 6: Cumulative Returns of E Portfolios", fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_e_portfolio_returns, legend.loc = "left", main = "E Portfolios", grid.col = NA)
+```
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. S
+
+```{r fig7, fig.width = 9, fig.asp = .6, fig.cap= "Figure 7: Cumulative Returns of S Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_s_portfolio_returns, legend.loc = "left", main = "S Portfolios", grid.col = NA)
+```
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. G
+
+```{r fig8, fig.width = 9, fig.asp = .6, fig.cap= "Figure 8: Cumulative Returns of G Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_g_portfolio_returns, legend.loc = "left", main = "G Portfolios", grid.col = NA)
+```
+
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. ESG
+
+```{r fig9, fig.width = 9, fig.asp = .6, fig.cap= "Figure 9: Cumulative Returns of ESG Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_esg_portfolio_returns, legend.loc = "left", main = "ESG Portfolios", grid.col = NA)
+```
+
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. Equal ESG
+
+```{r fig10, fig.width = 9, fig.asp = .6, fig.cap= "Figure 10: Cumulative Returns of Equal ESG Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_equal_esg_portfolio_returns, legend.loc = "left", main = "Equal ESG Portfolios", grid.col = NA)
+```
+
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. Average Annual Return
+
+Tables 1-3 show average annual return, annual standard deviation and Sharpe ratio for constructed portfolios.   
+
+<center> Table 1: Average Annual Return  </center> 
+<!-- \begin{center} -->
+<!-- \text{Table 1: Average Annual Return } -->
+<!-- \end{center} -->
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(pander)
+pander(annual_return_df, split.cell = 100, split.table = Inf)
+```
+
+Based on average annual return, portfolio 5 outperforms portfolio 1 for all scores, except of the S score.
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. Annual Standard Deviation
+
+<center> Table 2: Annual Standard Deviation  </center>
+<!-- \begin{center} -->
+<!-- \text{ } -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(annual_sd_df, split.cell = 100, split.table = Inf)
+```
+
+The remarkable fact is that portfolio 5 has the lowest risk and portfolio 1 has the highest risk (except of E score), measured with standard deviation. 
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. Sharpe Ratio
+
+
+<center> Table 3: Sharpe Ratio  </center>
+<!-- \begin{center} -->
+<!-- \text{ } -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(sharpe_ratio_df, split.cell = 100, split.table = Inf)
+```
+
+Based on the Sharpe ratio, portfolio 5 is a winner for all scores, except of the S score.
+
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. Benchmark and All-Best Portfolio Statistics
+
+The table 4 contains statistics for the benchmark S&P 500 index and the all-best portfolio. The benchmark has the lowest both average annual return and annual standard deviation compared to all portfolios.
+
+<center> Table 4: Benchmark and All-Best Portfolio Statistics  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(benchmark_and_all_best_stat, split.cell = 100, split.table = Inf)
+```
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. Average Sustainability Score
+
+Tables 6-9 illustrate average sustainability, size, value and momentum scores for constructed portfolios. 
+
+<center> Table 6: Average Sustainability Score  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(avg_esg_score_df, split.cell = 100, split.table = Inf)
+```
+We can see that portfolios differ significantly based on the average sustainability score.
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. Average Size Score
+
+<center> Table 7: Average Size Score  </center>
+<!-- \begin{center} -->
+<!-- \text{ } -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(avg_size_score_df, split.cell = 100, split.table = Inf)
+```
+ Regarding the average size score, it increases monotonically from portfolio 1 to portfolio 5, except of the ESGCS score.
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. Average Value Score
+
+<center> Table 8: Average Value Score  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(avg_ptb_score_df, split.cell = 100, split.table = Inf)
+```
+However, the portfolios have almost the same average value scores.
+
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. Average Momentum Score
+
+<center> Table 9: Average Momentum Score  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(avg_mom_score_df, split.cell = 100, split.table = Inf)
+```
+
+The portfolios also have almost the same momentum.
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. Market Betas
+
+Tables 10-12 contain Market, Bull and Bear Market Betas for constructed portfolios. We observe that they all decrease from portfolio 1 to portfolio 5.
+\pagebreak
+
+<center> Table 10: Market Betas  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(beta_df, split.cell = 100, split.table = Inf)
+```
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. Bull Market Betas
+
+<center> Table 11: Bull Market Betas  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(bull_beta_df, split.cell = 100, split.table = Inf)
+```
+
+# Results. S&P 500 Universe. Portfolios without Size Sorting. Bear Market Betas
+
+<center>  Table 12: Bear Market Betas </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(bear_beta_df, split.cell = 100, split.table = Inf)
+```
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. ESGCS
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+rm (list = ls())
+wd ="D:/Capstone Project/Data/"
+load(file=paste0(wd, "SPCOMP with size sorting.RData"))
+
+# Create xts objects from dataframes
+stocks_num_with_esg_score = xts(stocks_num_with_esg_score_df, order.by = as.Date(rownames(stocks_num_with_esg_score_df)))
+
+all_best_stocks_num = xts(all_best_stocks_num_df, order.by = as.Date(rownames(all_best_stocks_num_df)))
+
+
+cum_esgcs_portfolio_returns = xts(cum_esgcs_portfolio_returns_df, order.by = as.Date(rownames(cum_esgcs_portfolio_returns_df)))
+
+cum_e_portfolio_returns = xts(cum_e_portfolio_returns_df, order.by = as.Date(rownames(cum_e_portfolio_returns_df)))
+
+cum_s_portfolio_returns = xts(cum_s_portfolio_returns_df, order.by = as.Date(rownames(cum_s_portfolio_returns_df)))
+
+cum_g_portfolio_returns = xts(cum_g_portfolio_returns_df, order.by = as.Date(rownames(cum_g_portfolio_returns_df)))
+
+cum_esg_portfolio_returns = xts(cum_esg_portfolio_returns_df, order.by = as.Date(rownames(cum_esg_portfolio_returns_df)))
+
+cum_equal_esg_portfolio_returns = xts(cum_equal_esg_portfolio_returns_df, order.by = as.Date(rownames(cum_equal_esg_portfolio_returns_df)))
+
+
+esgcs_avg_esg_score = xts(esgcs_avg_esg_score_df, order.by = as.Date(rownames(esgcs_avg_esg_score_df)))
+
+e_avg_esg_score = xts(e_avg_esg_score_df, order.by = as.Date(rownames(e_avg_esg_score_df)))
+
+s_avg_esg_score = xts(s_avg_esg_score_df, order.by = as.Date(rownames(s_avg_esg_score_df)))
+
+g_avg_esg_score = xts(g_avg_esg_score_df, order.by = as.Date(rownames(g_avg_esg_score_df)))
+
+esg_avg_esg_score = xts(esg_avg_esg_score_df, order.by = as.Date(rownames(esg_avg_esg_score_df)))
+
+equal_esg_avg_esg_score = xts(equal_esg_avg_esg_score_df, order.by = as.Date(rownames(equal_esg_avg_esg_score_df)))
+
+
+esgcs_avg_size_score = xts(esgcs_avg_size_score_df, order.by = as.Date(rownames(esgcs_avg_size_score_df)))
+
+e_avg_size_score = xts(e_avg_size_score_df, order.by = as.Date(rownames(e_avg_size_score_df)))
+
+s_avg_size_score = xts(s_avg_size_score_df, order.by = as.Date(rownames(s_avg_size_score_df)))
+
+g_avg_size_score = xts(g_avg_size_score_df, order.by = as.Date(rownames(g_avg_size_score_df)))
+
+esg_avg_size_score = xts(esg_avg_size_score_df, order.by = as.Date(rownames(esg_avg_size_score_df)))
+
+equal_esg_avg_size_score = xts(equal_esg_avg_size_score_df, order.by = as.Date(rownames(equal_esg_avg_size_score_df)))
+
+
+
+esgcs_avg_ptb_score = xts(esgcs_avg_ptb_score_df, order.by = as.Date(rownames(esgcs_avg_ptb_score_df)))
+
+e_avg_ptb_score = xts(e_avg_ptb_score_df , order.by = as.Date(rownames(e_avg_ptb_score_df )))
+
+s_avg_ptb_score = xts(s_avg_ptb_score_df, order.by = as.Date(rownames(s_avg_ptb_score_df)))
+
+g_avg_ptb_score = xts(g_avg_ptb_score_df, order.by = as.Date(rownames(g_avg_ptb_score_df)))
+
+esg_avg_ptb_score = xts(esg_avg_ptb_score_df, order.by = as.Date(rownames(esg_avg_ptb_score_df)))
+
+equal_esg_avg_ptb_score = xts(equal_esg_avg_ptb_score_df, order.by = as.Date(rownames(equal_esg_avg_ptb_score_df)))
+
+
+esgcs_avg_mom_score = xts(esgcs_avg_mom_score_df, order.by = as.Date(rownames(esgcs_avg_mom_score_df)))
+
+e_avg_mom_score = xts(e_avg_mom_score_df, order.by = as.Date(rownames(e_avg_mom_score_df)))
+
+s_avg_mom_score = xts(s_avg_mom_score_df, order.by = as.Date(rownames(s_avg_mom_score_df)))
+
+g_avg_mom_score = xts(g_avg_mom_score_df, order.by = as.Date(rownames(g_avg_mom_score_df)))
+
+esg_avg_mom_score = xts(esg_avg_mom_score_df, order.by = as.Date(rownames(esg_avg_mom_score_df)))
+
+equal_esg_avg_mom_score = xts(equal_esg_avg_mom_score_df, order.by = as.Date(rownames(equal_esg_avg_mom_score_df)))
+
+```
+Figures 11 - 16 represent the cumulative returns for portfolios based on all six scores after size sorting. All 30 portfolios outperform the benchmark - S&P 500 index. For all scores the all-best portfolio shows the best performance. 
+
+```{r fig11, fig.width = 5.5, fig.asp = .6, fig.cap= "Figure 11: Cumulative Returns of ESGCS Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_esgcs_portfolio_returns, legend.loc = "left", main = "ESGCS Portfolios", grid.col = NA)
+```
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. E
+
+```{r fig12, fig.width = 9, fig.asp = .6, fig.cap= "Figure 12: Cumulative Returns of E Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_e_portfolio_returns, legend.loc = "left", main = "E Portfolios", grid.col = NA)
+```
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. S
+
+```{r fig13, fig.width = 9, fig.asp = .6, fig.cap= "Figure 13: Cumulative Returns of S Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_s_portfolio_returns, legend.loc = "left", main = "S Portfolios", grid.col = NA)
+```
+
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. G
+
+```{r fig14, fig.width = 9, fig.asp = .6, fig.cap= "Figure 14: Cumulative Returns of G Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_g_portfolio_returns, legend.loc = "left", main = "G Portfolios", grid.col = NA)
+```
+
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. ESG
+
+```{r fig15, fig.width = 9, fig.asp = .6, fig.cap= "Figure 15: Cumulative Returns of ESG Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_esg_portfolio_returns, legend.loc = "left", main = "ESG Portfolios", grid.col = NA)
+```
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. Equal ESG
+
+```{r fig16, fig.width = 9, fig.asp = .6, fig.cap= "Figure 16: Cumulative Returns of Equal ESG Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_equal_esg_portfolio_returns, legend.loc = "left", main = "Equal ESG Portfolios", grid.col = NA)
+```
+
+
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. Average Annual Return
+
+Tables 13-15 show average annual return, annual standard deviation and Sharpe ratio for double-sorted portfolios. 
+\pagebreak
+
+<center> Table 13: Average Annual Return   </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(pander)
+pander(annual_return_df, split.cell = 100, split.table = Inf)
+```
+Based on average annual return, portfolio 5 outperforms portfolio 1 for all scores. 
+
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. Annual Standard Deviation
+
+<center> Table 14: Annual Standard Deviation   </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(annual_sd_df, split.cell = 100, split.table = Inf)
+```
+The interesting fact is that portfolio 5 has the lowest risk (except of E and ESG scores) and portfolio 1 has the highest risk (except of Equal ESG score), measured with standard deviation.
+
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. Sharpe Ratio
+
+<center> Table 15: Sharpe Ratio   </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(sharpe_ratio_df, split.cell = 100, split.table = Inf)
+```
+
+Based on the Sharpe ratio, portfolio 5 is a winner for all scores, except of E and ESG scores.
+
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. Benchmark and All-Best Portfolio Statistics
+
+The table 16 contains statistics for the benchmark S&P 500 index and the double-sorted all-best portfolio. 
+
+<center> Table 16: Benchmark and All-Best Portfolio Statistics  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(benchmark_and_all_best_stat, split.cell = 100, split.table = Inf)
+```
+
+The all-best portfolio has the highest both average annual return and annual standard deviation.
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. Average Sustainability Score
+
+Tables 17-20 illustrate average sustainability, size, value and momentum scores for double-sorted portfolios. 
+
+<center> Table 17: Average Sustainability Score  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(avg_esg_score_df, split.cell = 100, split.table = Inf)
+```
+
+We can see that portfolios differ significantly based on the average sustainability score.
+
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. Average Size Score
+
+<center> Table 18: Average Size Score  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(avg_size_score_df, split.cell = 100, split.table = Inf)
+```
+
+ Regarding the average size score, it increases monotonically from portfolio 1 to portfolio 5, except of the ESGCS score.
+
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. Average Value Score
+
+<center> Table 19: Average Value Score  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(avg_ptb_score_df, split.cell = 100, split.table = Inf)
+```
+
+The average value and momentum scores are almost the same.
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. Average Momentum Score
+
+<center> Table 20: Average Momentum Score  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(avg_mom_score_df, split.cell = 100, split.table = Inf)
+```
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. Market Betas
+
+Tables 21-23 contain Market, Bull and Bear Market Betas for double-sorted portfolios. We observe that all Betas of portfolio 1 - portfolio 3 are higher than those for portfolio 4 - portfolio 5.
+\pagebreak
+
+<center> Table 21: Market Betas  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(beta_df, split.cell = 100, split.table = Inf)
+```
+
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. Bull Market Betas
+
+<center> Table 22: Bull Market Betas  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(bull_beta_df, split.cell = 100, split.table = Inf)
+```
+
+# Results. S&P 500 Universe. Double-Sorted Portfolios. Bear Market Betas
+
+<center> Table 23: Bear Market Betas  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(bear_beta_df, split.cell = 100, split.table = Inf)
+```
+
+
+# Results. Stoxx Europe 600 Universe. Number of Companies with Datastream Sustainability Scores
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+rm (list = ls())
+wd ="D:/Capstone Project/Data/"
+load(file=paste0(wd, "DJSTOXX.RData"))
+
+# Create xts objects from dataframes
+stocks_num_with_esg_score = xts(stocks_num_with_esg_score_df, order.by = as.Date(rownames(stocks_num_with_esg_score_df)))
+
+correlation = xts(correlation_df, order.by = as.Date(rownames(correlation_df)))
+
+all_best_stocks_num = xts(all_best_stocks_num_df, order.by = as.Date(rownames(all_best_stocks_num_df)))
+
+
+cum_esgcs_portfolio_returns = xts(cum_esgcs_portfolio_returns_df, order.by = as.Date(rownames(cum_esgcs_portfolio_returns_df)))
+
+cum_e_portfolio_returns = xts(cum_e_portfolio_returns_df, order.by = as.Date(rownames(cum_e_portfolio_returns_df)))
+
+cum_s_portfolio_returns = xts(cum_s_portfolio_returns_df, order.by = as.Date(rownames(cum_s_portfolio_returns_df)))
+
+cum_g_portfolio_returns = xts(cum_g_portfolio_returns_df, order.by = as.Date(rownames(cum_g_portfolio_returns_df)))
+
+cum_esg_portfolio_returns = xts(cum_esg_portfolio_returns_df, order.by = as.Date(rownames(cum_esg_portfolio_returns_df)))
+
+cum_equal_esg_portfolio_returns = xts(cum_equal_esg_portfolio_returns_df, order.by = as.Date(rownames(cum_equal_esg_portfolio_returns_df)))
+
+
+esgcs_avg_esg_score = xts(esgcs_avg_esg_score_df, order.by = as.Date(rownames(esgcs_avg_esg_score_df)))
+
+e_avg_esg_score = xts(e_avg_esg_score_df, order.by = as.Date(rownames(e_avg_esg_score_df)))
+
+s_avg_esg_score = xts(s_avg_esg_score_df, order.by = as.Date(rownames(s_avg_esg_score_df)))
+
+g_avg_esg_score = xts(g_avg_esg_score_df, order.by = as.Date(rownames(g_avg_esg_score_df)))
+
+esg_avg_esg_score = xts(esg_avg_esg_score_df, order.by = as.Date(rownames(esg_avg_esg_score_df)))
+
+equal_esg_avg_esg_score = xts(equal_esg_avg_esg_score_df, order.by = as.Date(rownames(equal_esg_avg_esg_score_df)))
+
+
+esgcs_avg_size_score = xts(esgcs_avg_size_score_df, order.by = as.Date(rownames(esgcs_avg_size_score_df)))
+
+e_avg_size_score = xts(e_avg_size_score_df, order.by = as.Date(rownames(e_avg_size_score_df)))
+
+s_avg_size_score = xts(s_avg_size_score_df, order.by = as.Date(rownames(s_avg_size_score_df)))
+
+g_avg_size_score = xts(g_avg_size_score_df, order.by = as.Date(rownames(g_avg_size_score_df)))
+
+esg_avg_size_score = xts(esg_avg_size_score_df, order.by = as.Date(rownames(esg_avg_size_score_df)))
+
+equal_esg_avg_size_score = xts(equal_esg_avg_size_score_df, order.by = as.Date(rownames(equal_esg_avg_size_score_df)))
+
+
+
+esgcs_avg_ptb_score = xts(esgcs_avg_ptb_score_df, order.by = as.Date(rownames(esgcs_avg_ptb_score_df)))
+
+e_avg_ptb_score = xts(e_avg_ptb_score_df , order.by = as.Date(rownames(e_avg_ptb_score_df )))
+
+s_avg_ptb_score = xts(s_avg_ptb_score_df, order.by = as.Date(rownames(s_avg_ptb_score_df)))
+
+g_avg_ptb_score = xts(g_avg_ptb_score_df, order.by = as.Date(rownames(g_avg_ptb_score_df)))
+
+esg_avg_ptb_score = xts(esg_avg_ptb_score_df, order.by = as.Date(rownames(esg_avg_ptb_score_df)))
+
+equal_esg_avg_ptb_score = xts(equal_esg_avg_ptb_score_df, order.by = as.Date(rownames(equal_esg_avg_ptb_score_df)))
+
+
+esgcs_avg_mom_score = xts(esgcs_avg_mom_score_df, order.by = as.Date(rownames(esgcs_avg_mom_score_df)))
+
+e_avg_mom_score = xts(e_avg_mom_score_df, order.by = as.Date(rownames(e_avg_mom_score_df)))
+
+s_avg_mom_score = xts(s_avg_mom_score_df, order.by = as.Date(rownames(s_avg_mom_score_df)))
+
+g_avg_mom_score = xts(g_avg_mom_score_df, order.by = as.Date(rownames(g_avg_mom_score_df)))
+
+esg_avg_mom_score = xts(esg_avg_mom_score_df, order.by = as.Date(rownames(esg_avg_mom_score_df)))
+
+equal_esg_avg_mom_score = xts(equal_esg_avg_mom_score_df, order.by = as.Date(rownames(equal_esg_avg_mom_score_df)))
+
+```
+
+The Figure 17 shows the number of companies in the Stoxx Europe 600 index with existing sustainability scores. For all scores and all time points this value lays in the range [345;599] that is sufficient for the analysis. For every time point the number of companies with ESG and ESGCS scores is the same. The number of companies with E score matches that for S scores, while for G score this indicator differs from them for 4 weeks.
+
+```{r fig17, fig.width = 5.5, fig.asp = .6, fig.cap= "Figure 17: Number of Companies with Datastream Sustainability Scores",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+Sys.setlocale("LC_ALL", "English")
+plot(stocks_num_with_esg_score, legend.loc = "bottom", main = "Number of Companies",  grid.col = NA)
+```
+
+# Results. Stoxx Europe 600 Universe. Correlation
+
+In the Figure 18 correlation between Sustainalytics ESG score and Datastream sustainability scores is illustrated. In all cases correlation is positive. The highest correlation of about 0.6 is observed for S score, while ESGCS and G scores have the lowest correlation with the Sustainalytics ESG score (smaller than 0.4)
+
+```{r fig18, fig.width = 5.5, fig.asp = .6, fig.cap= "Figure 18: Correlation between Sustainalytics ESG Score and Datastream Sustainability Scores",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(correlation, legend.loc = "bottom", main = "Correlation",  grid.col = NA)
+```
+
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting. ESGCS
+
+Figures 19 - 24 represent the cumulative returns for portfolios based on all six scores: ESGCS, E, S, G, ESG and Equal ESG. All 30 portfolios outperform the benchmark - Stoxx Europe 600 index. For all scores, except of the ESGCS score, Portfolio 2 performs best. The worst performing for all scores is the all-best portfolio.
+
+```{r fig19, fig.width = 5.5, fig.asp = .6, fig.cap= "Figure 19: Cumulative Returns of ESGCS Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_esgcs_portfolio_returns, legend.loc = "left", main = "ESGCS Portfolios", grid.col = NA)
+```
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting. E
+
+```{r fig20, fig.width = 9, fig.asp = .6, fig.cap= "Figure 20: Cumulative Returns of E Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_e_portfolio_returns, legend.loc = "left", main = "E Portfolios", grid.col = NA)
+```
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting. S
+
+```{r fig21, fig.width = 9, fig.asp = .6, fig.cap= "Figure 21: Cumulative Returns of S Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_s_portfolio_returns, legend.loc = "left", main = "S Portfolios", grid.col = NA)
+```
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting. G
+
+```{r fig22, fig.width = 9, fig.asp = .6, fig.cap= "Figure 22: Cumulative Returns of G Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_g_portfolio_returns, legend.loc = "left", main = "G Portfolios", grid.col = NA)
+```
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting. ESG
+
+```{r fig23, fig.width = 9, fig.asp = .6, fig.cap= "Figure 23: Cumulative Returns of ESG Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_esg_portfolio_returns, legend.loc = "left", main = "ESG Portfolios", grid.col = NA)
+```
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting. Equal ESG
+
+```{r fig24, fig.width = 9, fig.asp = .6, fig.cap= "Figure 24: Cumulative Returns of Equal ESG Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_equal_esg_portfolio_returns, legend.loc = "left", main = "Equal ESG Portfolios", grid.col = NA)
+```
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting. Average Annual Return
+
+Tables 24-26 show average annual return, annual standard deviation and Sharpe ratio for constructed portfolios. 
+\pagebreak
+
+<center> Table 24: Average Annual Return   </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(pander)
+pander(annual_return_df, split.cell = 100, split.table = Inf)
+```
+Based on average annual return, no patterns are defined. 
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting.Annual Standard Deviation
+
+<center> Table 25: Annual Standard Deviation   </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(annual_sd_df, split.cell = 100, split.table = Inf)
+```
+
+The surprising fact is that now portfolio 5 has the highest risk (except of ESGCS and S scores) and portfolio 1 has the lowest risk, measured with standard deviation.
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting.Sharpe Ratio
+
+<center> Table 26: Sharpe Ratio   </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(sharpe_ratio_df, split.cell = 100, split.table = Inf)
+```
+
+ Portfolio 1 has greater or equal Sharpe ratio than portfolio 5, except of the E score.
+
+
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting. Benchmark and All-Best Portfolio Statistics
+
+The table 27 contains statistics for the benchmark Stoxx Europe 600 index and the all-best portfolio. The benchmark has the lowest both average annual return and annual standard deviation compared to all portfolios. Excluding from consideration the benchmark, the all-best portfolio has the worst characteristics.
+
+<center> Table 27: Benchmark and All-Best Portfolio Statistics  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(benchmark_and_all_best_stat, split.cell = 100, split.table = Inf)
+```
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting. Average Sustainability Score
+
+
+Tables 28-31 illustrate average sustainability, size, value and momentum scores for constructed portfolios. 
+
+<center> Table 28: Average Sustainability Score  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(avg_esg_score_df, split.cell = 100, split.table = Inf)
+```
+We can see that portfolios differ significantly based on the average sustainability score.
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting. Average Size Score
+
+<center> Table 29: Average Size Score  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(avg_size_score_df, split.cell = 100, split.table = Inf)
+```
+
+ Regarding the average size score, it increases monotonically from portfolio 1 to portfolio 5, except of ESGCS and G score.
+
+
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting. Average Value Score
+
+<center> Table 30: Average Value Score  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(avg_ptb_score_df, split.cell = 100, split.table = Inf)
+```
+
+The value and momentum scores are almost the same on average.
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting. Average Momentum Score
+
+<center> Table 31: Average Momentum Score  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(avg_mom_score_df, split.cell = 100, split.table = Inf)
+```
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting. Market Betas
+
+Tables 32-34 contain Market, Bull and Bear Market Betas for constructed portfolios. We observe that portfolio 5 has all betas higher than portfolio 1.
+
+<center> Table 32: Market Betas  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(beta_df, split.cell = 100, split.table = Inf)
+```
+
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting. Bull Market Betas
+
+<center> Table 33: Bull Market Betas  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(bull_beta_df, split.cell = 100, split.table = Inf)
+```
+
+# Results. Stoxx Europe 600 Universe. Portfolios without Size Sorting. Bear Market Betas
+
+<center> Table 34: Bear Market Betas  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(bear_beta_df, split.cell = 100, split.table = Inf)
+```
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. ESGCS
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+rm (list = ls())
+wd ="D:/Capstone Project/Data/"
+load(file=paste0(wd, "DJSTOXX with size sorting.RData"))
+
+# Create xts objects from dataframes
+stocks_num_with_esg_score = xts(stocks_num_with_esg_score_df, order.by = as.Date(rownames(stocks_num_with_esg_score_df)))
+
+all_best_stocks_num = xts(all_best_stocks_num_df, order.by = as.Date(rownames(all_best_stocks_num_df)))
+
+
+cum_esgcs_portfolio_returns = xts(cum_esgcs_portfolio_returns_df, order.by = as.Date(rownames(cum_esgcs_portfolio_returns_df)))
+
+cum_e_portfolio_returns = xts(cum_e_portfolio_returns_df, order.by = as.Date(rownames(cum_e_portfolio_returns_df)))
+
+cum_s_portfolio_returns = xts(cum_s_portfolio_returns_df, order.by = as.Date(rownames(cum_s_portfolio_returns_df)))
+
+cum_g_portfolio_returns = xts(cum_g_portfolio_returns_df, order.by = as.Date(rownames(cum_g_portfolio_returns_df)))
+
+cum_esg_portfolio_returns = xts(cum_esg_portfolio_returns_df, order.by = as.Date(rownames(cum_esg_portfolio_returns_df)))
+
+cum_equal_esg_portfolio_returns = xts(cum_equal_esg_portfolio_returns_df, order.by = as.Date(rownames(cum_equal_esg_portfolio_returns_df)))
+
+
+esgcs_avg_esg_score = xts(esgcs_avg_esg_score_df, order.by = as.Date(rownames(esgcs_avg_esg_score_df)))
+
+e_avg_esg_score = xts(e_avg_esg_score_df, order.by = as.Date(rownames(e_avg_esg_score_df)))
+
+s_avg_esg_score = xts(s_avg_esg_score_df, order.by = as.Date(rownames(s_avg_esg_score_df)))
+
+g_avg_esg_score = xts(g_avg_esg_score_df, order.by = as.Date(rownames(g_avg_esg_score_df)))
+
+esg_avg_esg_score = xts(esg_avg_esg_score_df, order.by = as.Date(rownames(esg_avg_esg_score_df)))
+
+equal_esg_avg_esg_score = xts(equal_esg_avg_esg_score_df, order.by = as.Date(rownames(equal_esg_avg_esg_score_df)))
+
+
+esgcs_avg_size_score = xts(esgcs_avg_size_score_df, order.by = as.Date(rownames(esgcs_avg_size_score_df)))
+
+e_avg_size_score = xts(e_avg_size_score_df, order.by = as.Date(rownames(e_avg_size_score_df)))
+
+s_avg_size_score = xts(s_avg_size_score_df, order.by = as.Date(rownames(s_avg_size_score_df)))
+
+g_avg_size_score = xts(g_avg_size_score_df, order.by = as.Date(rownames(g_avg_size_score_df)))
+
+esg_avg_size_score = xts(esg_avg_size_score_df, order.by = as.Date(rownames(esg_avg_size_score_df)))
+
+equal_esg_avg_size_score = xts(equal_esg_avg_size_score_df, order.by = as.Date(rownames(equal_esg_avg_size_score_df)))
+
+
+
+esgcs_avg_ptb_score = xts(esgcs_avg_ptb_score_df, order.by = as.Date(rownames(esgcs_avg_ptb_score_df)))
+
+e_avg_ptb_score = xts(e_avg_ptb_score_df , order.by = as.Date(rownames(e_avg_ptb_score_df )))
+
+s_avg_ptb_score = xts(s_avg_ptb_score_df, order.by = as.Date(rownames(s_avg_ptb_score_df)))
+
+g_avg_ptb_score = xts(g_avg_ptb_score_df, order.by = as.Date(rownames(g_avg_ptb_score_df)))
+
+esg_avg_ptb_score = xts(esg_avg_ptb_score_df, order.by = as.Date(rownames(esg_avg_ptb_score_df)))
+
+equal_esg_avg_ptb_score = xts(equal_esg_avg_ptb_score_df, order.by = as.Date(rownames(equal_esg_avg_ptb_score_df)))
+
+
+esgcs_avg_mom_score = xts(esgcs_avg_mom_score_df, order.by = as.Date(rownames(esgcs_avg_mom_score_df)))
+
+e_avg_mom_score = xts(e_avg_mom_score_df, order.by = as.Date(rownames(e_avg_mom_score_df)))
+
+s_avg_mom_score = xts(s_avg_mom_score_df, order.by = as.Date(rownames(s_avg_mom_score_df)))
+
+g_avg_mom_score = xts(g_avg_mom_score_df, order.by = as.Date(rownames(g_avg_mom_score_df)))
+
+esg_avg_mom_score = xts(esg_avg_mom_score_df, order.by = as.Date(rownames(esg_avg_mom_score_df)))
+
+equal_esg_avg_mom_score = xts(equal_esg_avg_mom_score_df, order.by = as.Date(rownames(equal_esg_avg_mom_score_df)))
+
+```
+
+Figures 25 - 30 represent the cumulative returns for portfolios based on all six scores after size sorting. All 30 portfolios outperform the benchmark - Stoxx Europe 600 index. For all scores the all-best portfolio shows the worst performance.
+
+```{r fig25, fig.width = 5.5, fig.asp = .6, fig.cap= "Figure 25: Cumulative Returns of ESGCS Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_esgcs_portfolio_returns, legend.loc = "left", main = "ESGCS Portfolios", grid.col = NA)
+```
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. E
+
+
+```{r fig26, fig.width = 9, fig.asp = .6, fig.cap= "Figure 26: Cumulative Returns of E Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_e_portfolio_returns, legend.loc = "left", main = "E Portfolios", grid.col = NA)
+```
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. S
+
+```{r fig27, fig.width = 9, fig.asp = .6, fig.cap= "Figure 27: Cumulative Returns of S Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_s_portfolio_returns, legend.loc = "left", main = "S Portfolios", grid.col = NA)
+```
+
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. G
+
+```{r fig28, fig.width = 9, fig.asp = .6, fig.cap= "Figure 28: Cumulative Returns of G Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_g_portfolio_returns, legend.loc = "left", main = "G Portfolios", grid.col = NA)
+```
+
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. ESG
+
+```{r fig29, fig.width = 9, fig.asp = .6,  fig.cap= "Figure 29: Cumulative Returns of ESG Portfolios", fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_esg_portfolio_returns, legend.loc = "left", main = "ESG Portfolios", grid.col = NA)
+```
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. Equal ESG
+
+```{r fig30, fig.width = 9, fig.asp = .6, fig.cap= "Figure 30: Cumulative Returns of Equal ESG Portfolios",  fig.align = "center", echo=FALSE, message=FALSE, warning=FALSE, include = TRUE, results = "hide"}
+plot(cum_equal_esg_portfolio_returns, legend.loc = "left", main = "Equal ESG Portfolios", grid.col = NA)
+```
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. Average Annual Return
+
+Tables 35-37 show average annual return, annual standard deviation and Sharpe ratio for double-sorted portfolios.
+
+<center> Table 35: Average Annual Return   </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(pander)
+pander(annual_return_df, split.cell = 100, split.table = Inf)
+```
+ Based on average annual return, no patterns are defined. 
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. Annual Standard Deviation
+
+<center> Table 36: Annual Standard Deviation   </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(annual_sd_df, split.cell = 100, split.table = Inf)
+```
+The portfolio 5 has the highest risk (except of ESGCS and G scores) and portfolio 1 has the lowest risk, measured with standard deviation.
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. Sharpe Ratio
+
+<center> Table 37: Sharpe Ratio   </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(sharpe_ratio_df, split.cell = 100, split.table = Inf)
+```
+ Portfolio 1 has greater Sharpe ratio than portfolio 5.
+ 
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. Benchmark and All-Best Portfolio Statistics
+
+The table 38 contains statistics for the benchmark Stoxx Europe 600 index and the all-best portfolio. The all-best portfolio has the highest annual standard deviation and the lowest Sharpe ratio.
+
+<center> Table 38: Benchmark and All-Best Portfolio Statistics  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(benchmark_and_all_best_stat, split.cell = 100, split.table = Inf)
+```
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. Average Sustainability Score
+
+Tables 39-42 illustrate average sustainability, size, value and momentum scores for constructed portfolios.
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. Average Sustainability Score
+
+<center> Table 39: Average Sustainability Score  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(avg_esg_score_df, split.cell = 100, split.table = Inf)
+```
+ We can see that portfolios differ significantly based on the average sustainability score.
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. Average Size Score
+
+<center> Table 40: Average Size Score  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(avg_size_score_df, split.cell = 100, split.table = Inf)
+```
+
+ Regarding the average size score, portfolio 5 always has higher score than portfolio 1.
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. Average Value Score
+
+<center> Table 41: Average Value Score  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(avg_ptb_score_df, split.cell = 100, split.table = Inf)
+```
+However, the portfolios have almost the same average value and momentum scores.
+
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. Average Momentum Score
+
+<center> Table 42: Average Momentum Score  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(avg_mom_score_df, split.cell = 100, split.table = Inf)
+```
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. Average Momentum Score
+
+Tables 43-45 contain Market, Bull and Bear Market Betas for double-sorted portfolios. We observe that portfolio 5 has all betas higher than portfolio 1.
+\pagebreak
+
+<center> Table 43: Market Betas  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(beta_df, split.cell = 100, split.table = Inf)
+```
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. Bull Market Betas
+
+<center> Table 44: Bull Market Betas  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(bull_beta_df, split.cell = 100, split.table = Inf)
+```
+
+# Results. Stoxx Europe 600 Universe. Double-Sorted Portfolios. Bear Market Betas
+
+<center> Table 45: Bear Market Betas  </center>
+<!-- \begin{center} -->
+<!-- \text{} -->
+<!-- \end{center} -->
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pander(bear_beta_df, split.cell = 100, split.table = Inf)
+```
+
+
+# Discussion. Part 1
+
+- Firstly, we investigated how many companies from S&P 500 and Stoxx Europe 600 indices have E, S, G, ESG and ESGCS Datastream scores. We found out that for S&P 500 index this value lays in the range [377;505], while for Stoxx Europe 600 index it is in the interval [345;599]. These findings are sufficient to conduct the analysis for both American and European stock market.
+
+- Secondly, we examined the consistency of the scores by checking correlation between Sustainalytics ESG score and Datastream E, S, G, ESG, ESGCS and ESG Equal scores. For both American and European stock markets in all cases correlation is positive.
+
+- For the S&P 500 index the highest correlation with the Sustainalytics ESG score is observed for Equal ESG score (around 70% on average) and the lowest - for ESGCS score (around 35% on average).
+
+- For Stoxx Europe 600 the S score is mostly correlated with the Sustainalytics ESG score (around 55% on average) while ESGCS and G scores experience the lowest correlation (around 20% on average).
+
+- The correlation is far from 100%, meaning that the difference in scores could significantly influence the final conclusion.
+
+
+# Discussion. Part 2  
+
+- Thirdly, we constructed portfolios for both S&P 500 and Stoxx Europe 600 constituents.
+
+- Moreover, we additionally applied sorting by size score.
+
+- All constructed portfolios outperform the benchmarks. For both markets the benchmarks have the lowest both average annual return and annual standard deviation.
+
+- In terms of cumulative returns, for American market "good" companies perform better (portfolio 5 and all-best portfolio are winners without and with size sorting), while for European market "good" companies perform worse(all-best portfolio is a looser without and with size sorting).
+
+
+
+# Discussion. Part 3
+
+- Additionally we calculated average annual return, standard deviation and Sharpe ratio. We got completely different results for American and European stock market.
+
+- For S&P 500 stocks, as a rule, portfolio 5 has the highest Sharpe ratio and outperforms portfolio 1 in terms of annual return.
+
+- Regarding standard deviation, portfolio 5 has the lowest risk and portfolio 1 has the highest risk.
+
+- For Stoxx Europe 600 stocks, as a rule, portfolio 1 has higher Sharpe ratio than portfolio 5, portfolio 1 has the lowest risk and portfolio 5 has the highest risk.
+
+- Based on average annual return no patterns were defined.
+
+- For American stock market the all-best portfolio has the highest both average annual return and annual standard deviation in case of double-sorting.
+
+- For European stock market the all-best portfolio has the highest annual standard deviation and the lowest Sharpe ratio in both cases.
+
+# Discussion. Part 4
+
+- Fourthly, we calculated average sustainability, size, value and momentum scores for constructed portfolios.
+
+- Portfolios differ significantly based on the average sustainability score, while they have almost the same average value and momentum scores.
+
+- We discovered that "good" companies are usually detected among companies with high market capitalization. The opposite is true as well.
+
+- Finally, we calculated Market, Bull and Bear Market Betas for both American and European stock markets. The results are different for different markets. In USA portfolio 1 has all betas higher than portfolio 5. In Europe it is the opposite.
+
+# Conclusion. Part 1
+
+- Using sufficient amount of data, we showed that Datastream sustainability scores are positively correlated with the Sustainanalytics ESG score. However, correlation differs significantly for various scores.
+
+- We constructed sustainability-scores-based portfolios for both American and European Stock Markets without and with size sorting. For these markets we received different, even opposite results. In American market investing in "good" companies in terms of sustainability brings high return and low risk. For Europe this investment strategy is characterized with low return and high risk. In American market "good" stocks are less sensitive to all, positive and negative (separately) market movements. In European market it is opposite.
+
+- We discovered that sustainability scores positively correlated with market capitalization.
+
+- For implementation we used R programming language. This tool allowed us to execute all required steps efficiently and professionally.
+
+- In the end of the research we were able to answer some of the hottest questions in the field and provide asset managers and individual investors with valuable information. The finding about opposite results in American and European Stock Markets can help to avoid biased or even wrong investment decisions. 
+
+# References. Part 1
+
+1.	Blankenberg, A. K., & Gottschalk, J. F. (2018). Is socially responsible investing (SRI) in stocks a competitive capital investment? A comparative analysis based on the performance of sustainable stocks.
+2.	Borgers, A., Derwall, J., Koedijk, K., & ter Horst, J. (2015). Do social factors influence investment behavior and performance? Evidence from mutual fund holdings. Journal of Banking & Finance, 60, 112-126.
+3.	Breedt, A., Ciliberti, S., Gualdi, S., & Seager, P. (2019). Is ESG an Equity Factor or Just an Investment Guide?. The Journal of Investing, 28(2), 32-42.
+4.	Chang, C. E., & Doug Witte, H. (2010). Performance evaluation of US socially responsible mutual funds: revisiting doing good and doing well. American Journal of Business, 25(1), 9-24.
+5.	Charles, A., Darne, O., & Fouilloux, J. (2016). The impact of screening strategies on the performance of ESG indices.
+
+# References. Part 2
+
+6.	Chatterjee, S. (2018). Fund Characteristics and Performances of Socially Responsible Mutual Funds: Do ESG Ratings Play a Role?. arXiv preprint arXiv:1806.09906.
+7.	Ciciretti, R., Dalo, A., & Dam, L. (2017). The Price of Taste for Socially Responsible Investment.
+8.	Clark, G. L., Feiner, A., & Viehs, M. (2015). From the stockholder to the stakeholder: How sustainability can drive financial outperformance. Available at SSRN 2508281.
+9.	Dolvin, S., Fulkerson, J., & Krukover, A. (2019). Do "Good Guys" Finish Last? The Relationship between Morningstar Sustainability Ratings and Mutual Fund Performance. The Journal of Investing, 28(2), 77-91.
+10.	El Ghoul, S., & Karoui, A. (2017). Does corporate social responsibility affect mutual fund performance and flows?. Journal of Banking & Finance, 77, 53-63.
+
+# References. Part 3
+
+11.	Friede, G., Busch, T., & Bassen, A. (2015). ESG and financial performance: aggregated evidence from more than 2000 empirical studies. Journal of Sustainable Finance & Investment, 5(4), 210-233.
+12.	Fulton, M., Kahn, B., & Sharples, C. (2012). Sustainable investing: Establishing long-term value and performance. Available at SSRN 2222740.
+13.	Hale, J. (2016). Sustainable Investing Research Suggests No Performance Penalty. Morningstar Manager Research
+14.	Henke, H. M. (2016). The effect of social screening on bond mutual fund performance. Journal of Banking & Finance, 67, 69-84.
+15.	Hubel, B., & Scholz, H. (2018). Performance of socially responsible portfolios: The role of CSR exposures and CSR ratings. Available at SSRN 3091666.
+
+# References. Part 4
+
+16.	Nofsinger, J., & Varma, A. (2014). Socially responsible funds and market crises. Journal of Banking & Finance, 48, 180-193.
+17.	Pereira, P., Cortez, M. C., & Silva, F. (2018). Socially Responsible Investing and the Performance of European Bond Portfolios. Florinda, Socially Responsible Investing and the Performance of European Bond Portfolios (September 04, 2018).
+18.	Rathner, S. (2013). The influence of primary study characteristics on the performance differential between socially responsible and conventional investment funds: A meta-analysis. Journal of Business Ethics, 118(2), 349-363.
+19.	Richey, G. M. (2016). Sin Is In: An Alternative to Socially Responsible Investing?. The Journal of Investing, 25(2), 136-143.
+
+# References. Part 5
+
+20.	Rodriguez, J. (2010). The performance of socially responsible mutual funds: a volatility-match approach. Review of Accounting and Finance, 9(2), 180-188.
+21.	Sabbaghi, O. (2011). Do Green Exchange-Traded Funds Outperform the S&P500. Journal of Accounting and Finance, 11(1), 50-59
+22. Sustainalytics (2017). Investing in Sustainability.
+23. Thomson Reuters (2019). Thomson Reuters ESG Scores.
+24.	Trinks, P. J., & Scholtens, B. (2017). The opportunity cost of negative screening in socially responsible investing. Journal of Business Ethics, 140(2), 193-208.
+25.	Verheyden, T., Eccles, R. G., & Feiner, A. (2016). ESG for all? The impact of ESG screening on return, risk, and diversification. Journal of Applied Corporate Finance, 28(2), 47-55.
+26.	Walker, T. J., Lopatta, K., & Kaspereit, T. (2014). Corporate sustainability in asset pricing models and mutual funds performance measurement. Financial Markets and Portfolio Management, 28(4), 363-407.
+
