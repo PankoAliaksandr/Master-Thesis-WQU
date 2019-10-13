@@ -1,2 +1,2 @@
 # Master-Thesis-WQU
-Check the project wiki page
+Check the wiki page
